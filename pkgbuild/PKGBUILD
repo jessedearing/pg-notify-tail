@@ -1,0 +1,18 @@
+# $Id$
+# Contributor: Jesse Dearing <me@jesse.dev>
+
+_name=pg-notify-tail
+pkgname=pg-notify-tail-bin
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="A client that will output messages put on a channel with NOTIFY or pg_notify() to stdout."
+arch=('x86_64')
+url="https://github.com/jessedearing/pg-notify-tail"
+license=('MIT')
+source=('https://github.com/jessedearing/pg-notify-tail/releases/download/v0.0.1/pg-notify-tail_0.0.1_Linux_x86_64.tar.gz')
+sha256sums=('ea4b48ea3cc478c390886d2e199fa7f4b1f76c4402d5b5bb68025bb7da84738b')
+
+package() {
+  cd "${srcdir}"
+  install -Dm755 ${_name} ${pkgdir}/usr/bin/${_name}
+}
