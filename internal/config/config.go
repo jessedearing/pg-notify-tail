@@ -1,7 +1,9 @@
+// Package config contains configuration structs and validation
 package config
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -14,11 +16,21 @@ type Config struct {
 	Channel string
 }
 
+// Validate makes sure all configuration is valid and the program can start
 func (c *Config) Validate() error {
 	var errs []string
 
 	if c.PostgresURL == "" {
 		errs = append(errs, "Missing PostgresURL")
+	} else {
+		_, err := url.Parse(c.PostgresURL)
+		if err != nil {
+			errs = append(errs, err.Error())
+		}
+	}
+
+	if c.Channel == "" {
+		errs = append(errs, "Missing channel name")
 	}
 
 	if len(errs) == 0 {

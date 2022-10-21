@@ -1,3 +1,4 @@
+// Package pg contains Postgres functionality
 package pg
 
 import (

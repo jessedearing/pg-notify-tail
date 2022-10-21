@@ -1,3 +1,4 @@
+// Packakge main has the CLI entrypoint for pg-notify-tail
 package main
 
 import (
@@ -27,19 +28,19 @@ func main() {
 	defer cancel()
 
 	if err != nil {
-		ExitWithError(err)
+		exitWithError(err)
 		return
 	}
 
 	conn, err := pgx.Connect(ctx, cfg.PostgresURL)
 	if err != nil {
-		ExitWithError(err)
+		exitWithError(err)
 		return
 	}
 
 	_, err = conn.Exec(ctx, fmt.Sprintf("listen %s", cfg.Channel))
 	if err != nil {
-		ExitWithError(err)
+		exitWithError(err)
 		return
 	}
 
@@ -53,14 +54,14 @@ func main() {
 			fmt.Fprintln(os.Stdout, n.Payload)
 		case err = <-errChan:
 			cancel()
-			ExitWithError(err)
+			exitWithError(err)
 		case <-ctx.Done():
 			return
 		}
 	}
 }
 
-func ExitWithError(err error) {
+func exitWithError(err error) {
 	fmt.Fprintln(os.Stderr, "ERROR", err.Error())
 	os.Exit(1)
 }
