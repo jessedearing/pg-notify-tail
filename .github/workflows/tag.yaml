@@ -1,4 +1,4 @@
-name: Lint, Build, and Test
+name: Publish
 
 on:
   push:
@@ -21,16 +21,7 @@ jobs:
           go-version: 1.19
           cache: true
 
-      - name: Build
-        run: go build -v ./...
-
-      - name: Test
-        run: go test -v ./...
-
-      - name: Run Revive Action by pulling pre-built image
-        uses: docker://morphy/revive-action:v2
-
-      - name: Make sure goreleaser can Build
+      - name: Release with Goreleaser
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
