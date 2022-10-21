@@ -44,16 +44,19 @@ func main() {
 	}
 
 	var notiChan = make(chan pgconn.Notification)
-	go pg.NotifyOnChannel(ctx, conn, notiChan)
+	var errChan = make(chan error)
+	go pg.NotifyOnChannel(ctx, conn, notiChan, errChan)
 
-	go func() {
-		for range ctx.Done() {
-			close(notiChan)
+	for {
+		select {
+		case n := <-notiChan:
+			fmt.Fprintln(os.Stdout, n.Payload)
+		case err = <-errChan:
+			cancel()
+			ExitWithError(err)
+		case <-ctx.Done():
+			return
 		}
-	}()
-
-	for n := range notiChan {
-		fmt.Fprintln(os.Stdout, n.Payload)
 	}
 }
 
